@@ -1,6 +1,6 @@
 use eframe::egui;
 
-pub fn create_window() -> anyhow::Result<()> {
+pub fn create_window() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
         initial_window_size: Some(egui::vec2(400.0, 300.0)),
         min_window_size: Some(egui::vec2(300.0, 200.0)),
@@ -11,9 +11,7 @@ pub fn create_window() -> anyhow::Result<()> {
         "Adhan Rust",
         options,
         Box::new(|_cc| Box::new(MyApp::default())),
-    )?;
-
-    Ok(())
+    )
 }
 
 struct MyApp {
