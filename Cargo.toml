@@ -1,0 +1,11 @@
+[package]
+name = "adhan_rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.22"  # Для создания GUI
+egui = "0.22"    # Для интерфейса
+anyhow = "1.0"   # Для удобной обработки ошибок
+log = "0.4"      # Для логирования
+fern = "0.6"     # Для настройки логгера
