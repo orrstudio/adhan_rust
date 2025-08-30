@@ -37,11 +37,12 @@ pub fn apply_theme(ctx: &egui::Context, theme: Theme, opacity: f32) {
             visuals.override_text_color = Some(Color32::from_rgb(240, 240, 240));
         },
         Theme::Light => {
-            // Для светлой темы - белый фон с прозрачностью
-            visuals.panel_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
-            visuals.window_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
-            visuals.faint_bg_color = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
-            visuals.widgets.noninteractive.bg_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
+            // Для светлой темы - светло-серый фон с прозрачностью
+            let light_gray = Color32::from_rgb(240, 240, 240);
+            visuals.panel_fill = light_gray.gamma_multiply(alpha as f32 / 255.0);
+            visuals.window_fill = light_gray.gamma_multiply(alpha as f32 / 255.0);
+            visuals.faint_bg_color = light_gray.gamma_multiply(alpha as f32 / 255.0);
+            visuals.widgets.noninteractive.bg_fill = light_gray.gamma_multiply(alpha as f32 / 255.0);
             
             // Текст остается непрозрачным
             visuals.override_text_color = Some(Color32::from_rgb(0, 0, 0));
@@ -55,4 +56,3 @@ pub fn apply_theme(ctx: &egui::Context, theme: Theme, opacity: f32) {
     // Применяем визуальные настройки
     ctx.set_visuals(visuals);
 }
-

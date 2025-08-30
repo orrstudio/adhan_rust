@@ -19,4 +19,3 @@ pub const MIN_WINDOW_HEIGHT: f32 = 560.0;
 pub const DEFAULT_OPACITY: f32 = 1.0;
 pub const MIN_OPACITY: f32 = 0.0;
 pub const MAX_OPACITY: f32 = 1.0;
-
