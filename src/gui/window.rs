@@ -29,19 +29,26 @@ impl Default for MyApp {
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::CentralPanel::default().show(ctx, |ui| {
-            ui.heading("Привет из Adhan Rust!");
-            
-            ui.horizontal(|ui| {
-                ui.label("Введите ваше имя: ");
-                ui.text_edit_singleline(&mut self.name);
+        // Настройка визуального стиля с максимально черным фоном (RGBA 0, 0, 0, 255)
+        let mut visuals = egui::Visuals::dark();
+        visuals.window_fill = egui::Color32::from_rgba_premultiplied(0, 0, 0, 200);
+        ctx.set_visuals(visuals);
+
+        egui::CentralPanel::default()
+            .frame(egui::Frame::none())
+            .show(ctx, |ui| {
+                ui.heading("Привет из Adhan Rust!");
+                
+                ui.horizontal(|ui| {
+                    ui.label("Введите ваше имя: ");
+                    ui.text_edit_singleline(&mut self.name);
+                });
+                
+                if ui.button("Поприветствовать").clicked() {
+                    println!("Привет, {}!", self.name);
+                }
+                
+                ui.label(format!("Привет, {}! 👋", self.name));
             });
-            
-            if ui.button("Поприветствовать").clicked() {
-                println!("Привет, {}!", self.name);
-            }
-            
-            ui.label(format!("Привет, {}! 👋", self.name));
-        });
     }
 }
