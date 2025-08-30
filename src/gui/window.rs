@@ -1,14 +1,15 @@
 use eframe::egui;
+use crate::config::{WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT};
 
 pub fn create_window() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
-        initial_window_size: Some(egui::vec2(400.0, 300.0)),
-        min_window_size: Some(egui::vec2(300.0, 200.0)),
+        initial_window_size: Some(egui::vec2(WINDOW_WIDTH, WINDOW_HEIGHT)),
+        min_window_size: Some(egui::vec2(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)),
         ..Default::default()
     };
 
     eframe::run_native(
-        "Adhan Rust",
+        WINDOW_TITLE,
         options,
         Box::new(|_cc| Box::new(MyApp::default())),
     )
