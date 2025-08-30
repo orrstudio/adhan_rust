@@ -1,48 +1,24 @@
 use eframe::egui;
+use egui::ViewportBuilder;
 use crate::config::{
     WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, 
     MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, 
-    BACKGROUND_COLOR, PADDING
+    PADDING
 };
-use egui::ViewportBuilder;
-use crate::gui::app;
-
-/// Настройки темы приложения
-pub fn setup_theme(ctx: &egui::Context) {
-    // Устанавливаем темную тему
-    let mut visuals = egui::Visuals::dark();
-    
-    // Настраиваем цвета из конфигурации
-    let bg_color = egui::Color32::from_rgba_premultiplied(
-        BACKGROUND_COLOR[0], 
-        BACKGROUND_COLOR[1], 
-        BACKGROUND_COLOR[2], 
-        BACKGROUND_COLOR[3]
-    );
-    
-    visuals.window_fill = bg_color;
-    visuals.panel_fill = bg_color;
-    visuals.faint_bg_color = bg_color;
-    
-    ctx.set_visuals(visuals);
-}
+use crate::gui::{app, apply_theme, Theme};
 
 /// Получить настройки фрейма для панели
 pub fn get_panel_frame() -> egui::Frame {
-    let bg_color = egui::Color32::from_rgba_premultiplied(
-        BACKGROUND_COLOR[0], 
-        BACKGROUND_COLOR[1], 
-        BACKGROUND_COLOR[2], 
-        BACKGROUND_COLOR[3]
-    );
+    // Используем прозрачный фон, чтобы тема управляла цветом
+    let bg_color = egui::Color32::TRANSPARENT;
     
     // Устанавливаем только внутренние отступы (приводим f32 к i8)
     let padding = egui::Margin::symmetric(PADDING as i8, PADDING as i8);
     
-    egui::Frame::default()
+    egui::Frame::NONE
         .fill(bg_color)
         .inner_margin(padding)
-        .stroke(egui::Stroke::NONE)
+        .corner_radius(8.0)  // Закругляем углы
 }
 
 pub fn create_window() -> eframe::Result<()> {
@@ -61,9 +37,11 @@ pub fn create_window() -> eframe::Result<()> {
         WINDOW_TITLE,
         options,
         Box::new(|cc| {
-            // Настраиваем тему при инициализации
-            setup_theme(&cc.egui_ctx);
-            Ok(Box::new(app::App::default()))
+            // Создаем приложение
+            let mut app = app::App::default();
+            // Применяем тему по умолчанию
+            apply_theme(&cc.egui_ctx, app.current_theme);
+            Ok(Box::new(app))
         }),
     )
 }

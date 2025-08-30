@@ -16,11 +16,13 @@ pub const MIN_WINDOW_HEIGHT: f32 = 560.0;
 
 // ===== ПРОЗРАЧНОСТЬ =====
 /// Прозрачность окна (0 - полностью прозрачное, 255 - полностью непрозрачное)
-pub const WINDOW_OPACITY: u8 = 100;
+pub const WINDOW_OPACITY: u8 = 255;
 
 // ===== ЦВЕТА =====
 /// Основной цвет фона (черный с прозрачностью)
-pub const BACKGROUND_COLOR: [u8; 4] = [0, 0, 0, WINDOW_OPACITY];
+pub const DARK_BACKGROUND: [u8; 4] = [0, 0, 0, WINDOW_OPACITY];
+/// Светлый цвет фона с прозрачностью
+pub const LIGHT_BACKGROUND: [u8; 4] = [1, 1, 1, WINDOW_OPACITY];
 
 // ===== ОТСТУПЫ =====
 /// Внутренние отступы (padding) элементов интерфейса
