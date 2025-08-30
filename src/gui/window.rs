@@ -1,17 +1,24 @@
 use eframe::egui;
-use crate::config::{WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT};
+use crate::config::{WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, WINDOW_OPACITY};
+use egui::ViewportBuilder;
+use egui::epaint::Margin;
 
 pub fn create_window() -> eframe::Result<()> {
+    let viewport = ViewportBuilder::default()
+        .with_inner_size(egui::vec2(WINDOW_WIDTH, WINDOW_HEIGHT))
+        .with_min_inner_size(egui::vec2(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT))
+        .with_transparent(true)
+        .with_decorations(true);
+
     let options = eframe::NativeOptions {
-        initial_window_size: Some(egui::vec2(WINDOW_WIDTH, WINDOW_HEIGHT)),
-        min_window_size: Some(egui::vec2(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)),
+        viewport,
         ..Default::default()
     };
 
     eframe::run_native(
         WINDOW_TITLE,
         options,
-        Box::new(|_cc| Box::new(MyApp::default())),
+        Box::new(|_cc| Ok(Box::<MyApp>::default())),
     )
 }
 
@@ -29,14 +36,21 @@ impl Default for MyApp {
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Устанавливаем темную тему
-        ctx.set_visuals(egui::Visuals::dark());
+        // Настраиваем стиль с полупрозрачным черным фоном
+        let mut visuals = egui::Visuals::dark();
+        // Используем значение прозрачности из конфига
+        let semi_transparent_black = egui::Color32::from_rgba_premultiplied(0, 0, 0, WINDOW_OPACITY);
+        visuals.window_fill = semi_transparent_black;
+        visuals.panel_fill = semi_transparent_black;
+        visuals.faint_bg_color = semi_transparent_black;
+        ctx.set_visuals(visuals);
 
-        // Устанавливаем черный фон для всего окна
+        // Устанавливаем полупрозрачный черный фон для центральной панели
         egui::CentralPanel::default()
-            .frame(egui::Frame::none()
-                .fill(egui::Color32::from_rgb(0, 0, 0))
-                .outer_margin(egui::style::Margin::same(0.0)))
+            .frame(egui::Frame::NONE
+                .fill(egui::Color32::from_rgba_premultiplied(0, 0, 0, WINDOW_OPACITY))
+                .outer_margin(Margin::ZERO)
+                .inner_margin(Margin::ZERO))
             .show(ctx, |ui| {
                 ui.heading("Привет из Adhan Rust!");
                 
