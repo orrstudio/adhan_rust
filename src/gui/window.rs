@@ -2,7 +2,7 @@ use eframe::egui;
 use crate::config::{
     WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, 
     MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, 
-    BACKGROUND_COLOR, MARGIN_ZERO
+    BACKGROUND_COLOR, PADDING
 };
 use egui::ViewportBuilder;
 use crate::gui::app;
@@ -36,10 +36,13 @@ pub fn get_panel_frame() -> egui::Frame {
         BACKGROUND_COLOR[3]
     );
     
-    egui::Frame::NONE
+    // Устанавливаем только внутренние отступы (приводим f32 к i8)
+    let padding = egui::Margin::symmetric(PADDING as i8, PADDING as i8);
+    
+    egui::Frame::default()
         .fill(bg_color)
-        .outer_margin(MARGIN_ZERO)
-        .inner_margin(MARGIN_ZERO)
+        .inner_margin(padding)
+        .stroke(egui::Stroke::NONE)
 }
 
 pub fn create_window() -> eframe::Result<()> {
