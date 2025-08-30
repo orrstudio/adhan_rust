@@ -1,7 +1,46 @@
 use eframe::egui;
-use crate::config::{WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, WINDOW_OPACITY};
+use crate::config::{
+    WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, 
+    MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, 
+    BACKGROUND_COLOR, MARGIN_ZERO
+};
 use egui::ViewportBuilder;
-use egui::epaint::Margin;
+use crate::gui::app;
+
+/// Настройки темы приложения
+pub fn setup_theme(ctx: &egui::Context) {
+    // Устанавливаем темную тему
+    let mut visuals = egui::Visuals::dark();
+    
+    // Настраиваем цвета из конфигурации
+    let bg_color = egui::Color32::from_rgba_premultiplied(
+        BACKGROUND_COLOR[0], 
+        BACKGROUND_COLOR[1], 
+        BACKGROUND_COLOR[2], 
+        BACKGROUND_COLOR[3]
+    );
+    
+    visuals.window_fill = bg_color;
+    visuals.panel_fill = bg_color;
+    visuals.faint_bg_color = bg_color;
+    
+    ctx.set_visuals(visuals);
+}
+
+/// Получить настройки фрейма для панели
+pub fn get_panel_frame() -> egui::Frame {
+    let bg_color = egui::Color32::from_rgba_premultiplied(
+        BACKGROUND_COLOR[0], 
+        BACKGROUND_COLOR[1], 
+        BACKGROUND_COLOR[2], 
+        BACKGROUND_COLOR[3]
+    );
+    
+    egui::Frame::NONE
+        .fill(bg_color)
+        .outer_margin(MARGIN_ZERO)
+        .inner_margin(MARGIN_ZERO)
+}
 
 pub fn create_window() -> eframe::Result<()> {
     let viewport = ViewportBuilder::default()
@@ -18,46 +57,10 @@ pub fn create_window() -> eframe::Result<()> {
     eframe::run_native(
         WINDOW_TITLE,
         options,
-        Box::new(|_cc| Ok(Box::<MyApp>::default())),
+        Box::new(|cc| {
+            // Настраиваем тему при инициализации
+            setup_theme(&cc.egui_ctx);
+            Ok(Box::new(app::App::default()))
+        }),
     )
-}
-
-struct MyApp {
-    name: String,
-}
-
-impl Default for MyApp {
-    fn default() -> Self {
-        Self {
-            name: "Мир".to_owned(),
-        }
-    }
-}
-
-impl eframe::App for MyApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Устанавливаем темную тему
-        ctx.set_visuals(egui::Visuals::dark());
-
-        // Устанавливаем полупрозрачный черный фон для центральной панели
-        egui::CentralPanel::default()
-            .frame(egui::Frame::NONE
-                .fill(egui::Color32::from_rgba_premultiplied(0, 0, 0, WINDOW_OPACITY))
-                .outer_margin(Margin::ZERO)
-                .inner_margin(Margin::ZERO))
-            .show(ctx, |ui| {
-                ui.heading("Привет из Adhan Rust!");
-                
-                ui.horizontal(|ui| {
-                    ui.label("Введите ваше имя: ");
-                    ui.text_edit_singleline(&mut self.name);
-                });
-                
-                if ui.button("Поприветствовать").clicked() {
-                    println!("Привет, {}!", self.name);
-                }
-                
-                ui.label(format!("Привет, {}! 👋", self.name));
-            });
-    }
 }

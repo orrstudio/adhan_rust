@@ -1,5 +1,8 @@
-mod window;
+mod app;
+pub mod window;
+
+pub use window::create_window;
 
 pub fn run() -> eframe::Result<()> {
-    window::create_window()
+    create_window()
 }
