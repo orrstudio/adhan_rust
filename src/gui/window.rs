@@ -29,13 +29,14 @@ impl Default for MyApp {
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Настройка визуального стиля с максимально черным фоном (RGBA 0, 0, 0, 255)
-        let mut visuals = egui::Visuals::dark();
-        visuals.window_fill = egui::Color32::from_rgba_premultiplied(0, 0, 0, 200);
-        ctx.set_visuals(visuals);
+        // Устанавливаем темную тему
+        ctx.set_visuals(egui::Visuals::dark());
 
+        // Устанавливаем черный фон для всего окна
         egui::CentralPanel::default()
-            .frame(egui::Frame::none())
+            .frame(egui::Frame::none()
+                .fill(egui::Color32::from_rgb(0, 0, 0))
+                .outer_margin(egui::style::Margin::same(0.0)))
             .show(ctx, |ui| {
                 ui.heading("Привет из Adhan Rust!");
                 
