@@ -17,41 +17,42 @@ impl Default for Theme {
 pub fn apply_theme(ctx: &egui::Context, theme: Theme, opacity: f32) {
     // Применяем тему с учетом прозрачности
     let alpha = (opacity * 255.0) as u8;
-    let visuals = match theme {
+    
+    // Создаем копию стандартной темы
+    let mut visuals = match theme {
+        Theme::Dark => egui::Visuals::dark(),
+        Theme::Light => egui::Visuals::light(),
+    };
+    
+    // Применяем прозрачность только к фону
+    match theme {
         Theme::Dark => {
-            let mut visuals = egui::Visuals::dark();
+            // Для темной темы - черный фон с прозрачностью
+            visuals.panel_fill = Color32::from_rgba_premultiplied(0, 0, 0, alpha);
+            visuals.window_fill = Color32::from_rgba_premultiplied(0, 0, 0, alpha);
+            visuals.faint_bg_color = Color32::from_rgba_premultiplied(0, 0, 0, alpha);
+            visuals.widgets.noninteractive.bg_fill = Color32::from_rgba_premultiplied(0, 0, 0, alpha);
             
-            // Основные цвета для темной темы с прозрачностью
-            visuals.panel_fill = Color32::from_rgba_premultiplied(0, 0, 0, alpha);   // Черный фон с прозрачностью
-            visuals.faint_bg_color = Color32::from_rgba_premultiplied(0, 0, 0, alpha); // Черный фон с прозрачностью
-            visuals.window_fill = Color32::from_rgba_premultiplied(0, 0, 0, alpha);   // Черный фон для окна с прозрачностью
-            
-            // Цвета текста для темной темы
-            visuals.override_text_color = Some(Color32::from_rgb(240, 240, 240)); // Почти белый текст
-            
-            // Дополнительные настройки
-            visuals.code_bg_color = Color32::from_rgba_premultiplied(20, 20, 25, 255); // Темно-серый для кода
-            
-            visuals
+            // Текст остается непрозрачным
+            visuals.override_text_color = Some(Color32::from_rgb(240, 240, 240));
         },
         Theme::Light => {
-            let mut visuals = egui::Visuals::light();
+            // Для светлой темы - белый фон с прозрачностью
+            visuals.panel_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
+            visuals.window_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
+            visuals.faint_bg_color = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
+            visuals.widgets.noninteractive.bg_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);
             
-            // Основные цвета для светлой темы с прозрачностью
-            visuals.panel_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);   // Белый фон с прозрачностью
-            visuals.faint_bg_color = Color32::from_rgba_premultiplied(255, 255, 255, alpha); // Белый фон с прозрачностью
-            visuals.window_fill = Color32::from_rgba_premultiplied(255, 255, 255, alpha);   // Белый фон для окна с прозрачностью
-            
-            // Цвета текста для светлой темы
-            visuals.override_text_color = Some(Color32::from_rgb(0, 0, 0)); // Черный текст
-           
-            // Дополнительные настройки
-            visuals.code_bg_color = Color32::from_rgb(245, 245, 245); // Светло-серый для кода
-            
-            visuals
+            // Текст остается непрозрачным
+            visuals.override_text_color = Some(Color32::from_rgb(0, 0, 0));
         },
     };
     
+    // Убираем тень у окна для лучшего визуального восприятия
+    visuals.window_shadow.blur = 0;
+    visuals.window_shadow.spread = 0;
+    
+    // Применяем визуальные настройки
     ctx.set_visuals(visuals);
 }
 

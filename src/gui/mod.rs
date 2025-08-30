@@ -84,7 +84,7 @@ pub fn run() -> Result<(), eframe::Error> {
             .with_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
             .with_min_inner_size([MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT])
             .with_transparent(true)
-            .with_decorations(true), // Убираем стандартные рамки окна
+            .with_decorations(true), 
         ..Default::default()
     };
 
