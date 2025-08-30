@@ -36,14 +36,8 @@ impl Default for MyApp {
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Настраиваем стиль с полупрозрачным черным фоном
-        let mut visuals = egui::Visuals::dark();
-        // Используем значение прозрачности из конфига
-        let semi_transparent_black = egui::Color32::from_rgba_premultiplied(0, 0, 0, WINDOW_OPACITY);
-        visuals.window_fill = semi_transparent_black;
-        visuals.panel_fill = semi_transparent_black;
-        visuals.faint_bg_color = semi_transparent_black;
-        ctx.set_visuals(visuals);
+        // Устанавливаем темную тему
+        ctx.set_visuals(egui::Visuals::dark());
 
         // Устанавливаем полупрозрачный черный фон для центральной панели
         egui::CentralPanel::default()
