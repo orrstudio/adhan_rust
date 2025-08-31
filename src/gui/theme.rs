@@ -44,8 +44,9 @@ pub fn apply_theme(ctx: &egui::Context, theme: Theme, opacity: f32) {
             visuals.faint_bg_color = light_gray.gamma_multiply(alpha as f32 / 255.0);
             visuals.widgets.noninteractive.bg_fill = light_gray.gamma_multiply(alpha as f32 / 255.0);
             
-            // Текст остается непрозрачным
-            visuals.override_text_color = Some(Color32::from_rgb(0, 0, 0));
+            // Инвертируем цвет текста в зависимости от прозрачности
+            let inverted_alpha = 255 - alpha;
+            visuals.override_text_color = Some(Color32::from_rgba_premultiplied(inverted_alpha, inverted_alpha, inverted_alpha, 255));
         },
     };
     
