@@ -8,6 +8,7 @@ use crate::config::{MIN_OPACITY, MAX_OPACITY, DEFAULT_OPACITY};
 pub struct SettingsWindow {
     command_sender: Option<Sender<WindowCommand>>,
     opacity: f32,
+    initial_opacity: f32,
 }
 
 impl SettingsWindow {
@@ -15,6 +16,7 @@ impl SettingsWindow {
         Self {
             command_sender: None,
             opacity: DEFAULT_OPACITY,
+            initial_opacity: DEFAULT_OPACITY,
         }
     }
     
@@ -22,8 +24,16 @@ impl SettingsWindow {
         self.command_sender = Some(sender);
         self
     }
+    
+    pub fn with_opacity(mut self, opacity: f32) -> Self {
+        self.opacity = opacity;
+        self.initial_opacity = opacity;
+        self
+    }
 
-    fn show_settings_ui(&mut self, ui: &mut egui::Ui) {
+    fn show_settings_ui(&mut self, ui: &mut egui::Ui) -> bool {
+        let mut settings_changed = false;
+        
         egui::Grid::new("settings_grid")
             .num_columns(2)
             .spacing([20.0, 10.0])
@@ -31,15 +41,20 @@ impl SettingsWindow {
             .show(ui, |ui| {
                 // Настройка прозрачности
                 ui.label("Прозрачность окна:");
-                ui.horizontal(|ui| {
-                    ui.add(
-                        egui::Slider::new(&mut self.opacity, MIN_OPACITY..=MAX_OPACITY)
-                            .suffix("%")
-                            .fixed_decimals(1)
-                    );
-                });
+                let response = ui.add(
+                    egui::Slider::new(&mut self.opacity, MIN_OPACITY..=MAX_OPACITY)
+                        .suffix("%")
+                        .fixed_decimals(1)
+                );
+                
+                if response.drag_stopped() || response.lost_focus() {
+                    settings_changed = true;
+                }
+                
                 ui.end_row();
             });
+            
+        settings_changed
     }
 }
 
@@ -68,12 +83,28 @@ impl App for SettingsWindow {
                 });
             });
             
-            // Кнопка сохранения настроек
+            // Кнопки управления
             ui.separator();
-            if ui.button("Применить").clicked() {
-                // TODO: Применить настройки прозрачности к главному окну
-                info!("Применена прозрачность: {}%", self.opacity * 100.0);
-            }
+            
+            ui.horizontal(|ui| {
+                if ui.button("Отмена").clicked() {
+                    // Восстанавливаем исходную прозрачность
+                    self.opacity = self.initial_opacity;
+                    // Закрываем окно настроек
+                    ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                }
+                
+                if ui.button("Применить").clicked() {
+                    info!("Применена прозрачность: {}%", self.opacity * 100.0);
+                    // Закрываем окно настроек
+                    if let Some(sender) = &self.command_sender {
+                        if let Err(e) = sender.send(WindowCommand::OpenMain) {
+                            log::error!("Не удалось отправить команду: {}", e);
+                        }
+                    }
+                    ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                }
+            });
         });
     }
 }
