@@ -28,16 +28,16 @@ impl MainWindow {
 
 impl App for MainWindow {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
-        // Set window to always be on bottom
+        // Установить окно всегда на самом низу
         ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(
             egui::viewport::WindowLevel::AlwaysOnBottom
         ));
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.heading("Главное окно");
+            ui.heading("00:00");
 
-            if ui.button("Настройки").clicked() {
-                info!("Кнопка 'Настройки' нажата");
+            if ui.button("Settings").clicked() {
+                info!("Кнопка 'Settings' нажата");
                 if let Some(sender) = &self.command_sender {
                     if let Err(e) = sender.send(WindowCommand::OpenSettings) {
                         log::error!("Не удалось отправить команду: {}", e);

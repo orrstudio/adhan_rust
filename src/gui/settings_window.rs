@@ -62,8 +62,8 @@ impl App for SettingsWindow {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             // Кнопка возврата в главное меню
-            if ui.button("← Вернуться в главное меню").clicked() {
-                info!("Кнопка 'Вернуться в главное меню' нажата");
+            if ui.button("Back to Main").clicked() {
+                info!("Кнопка 'Back to Main' нажата");
                 if let Some(sender) = &self.command_sender {
                     if let Err(e) = sender.send(WindowCommand::OpenMain) {
                         log::error!("Не удалось отправить команду: {}", e);
@@ -74,7 +74,7 @@ impl App for SettingsWindow {
             }
 
             ui.separator();
-            ui.heading("Настройки");
+            ui.heading("Settings");
             
             // Прокручиваемая область для настроек
             egui::ScrollArea::vertical().show(ui, |ui| {
@@ -87,14 +87,14 @@ impl App for SettingsWindow {
             ui.separator();
             
             ui.horizontal(|ui| {
-                if ui.button("Отмена").clicked() {
+                if ui.button("Cancel").clicked() {
                     // Восстанавливаем исходную прозрачность
                     self.opacity = self.initial_opacity;
                     // Закрываем окно настроек
                     ctx.send_viewport_cmd(egui::ViewportCommand::Close);
                 }
                 
-                if ui.button("Применить").clicked() {
+                if ui.button("Apply").clicked() {
                     info!("Применена прозрачность: {}%", self.opacity * 100.0);
                     // Закрываем окно настроек
                     if let Some(sender) = &self.command_sender {
