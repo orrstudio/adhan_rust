@@ -3,32 +3,18 @@ use log::info;
 use std::sync::mpsc::Sender;
 
 use super::main_window::WindowCommand;
-
-#[derive(Debug, Default)]
-pub struct Settings {
-    // Настройки прозрачности
-    pub opacity: f32,
-    // Пример других настроек (можно добавить больше)
-    pub show_notifications: bool,
-    pub enable_sound: bool,
-    pub dark_mode: bool,
-}
+use crate::config::{MIN_OPACITY, MAX_OPACITY, DEFAULT_OPACITY};
 
 pub struct SettingsWindow {
     command_sender: Option<Sender<WindowCommand>>,
-    settings: Settings,
+    opacity: f32,
 }
 
 impl SettingsWindow {
     pub fn new() -> Self {
         Self {
             command_sender: None,
-            settings: Settings {
-                opacity: 1.0,
-                show_notifications: true,
-                enable_sound: true,
-                dark_mode: true,
-            },
+            opacity: DEFAULT_OPACITY,
         }
     }
     
@@ -43,24 +29,15 @@ impl SettingsWindow {
             .spacing([20.0, 10.0])
             .striped(true)
             .show(ui, |ui| {
-                // Прозрачность
-                ui.label("Прозрачность:");
-                ui.add(egui::Slider::new(&mut self.settings.opacity, 0.1..=1.0).suffix(" %"));
-                ui.end_row();
-
-                // Уведомления
-                ui.label("Показывать уведомления:");
-                ui.checkbox(&mut self.settings.show_notifications, "");
-                ui.end_row();
-
-                // Звук
-                ui.label("Включить звук:");
-                ui.checkbox(&mut self.settings.enable_sound, "");
-                ui.end_row();
-
-                // Тёмная тема
-                ui.label("Тёмная тема:");
-                ui.checkbox(&mut self.settings.dark_mode, "");
+                // Настройка прозрачности
+                ui.label("Прозрачность окна:");
+                ui.horizontal(|ui| {
+                    ui.add(
+                        egui::Slider::new(&mut self.opacity, MIN_OPACITY..=MAX_OPACITY)
+                            .suffix("%")
+                            .fixed_decimals(1)
+                    );
+                });
                 ui.end_row();
             });
     }
@@ -93,9 +70,9 @@ impl App for SettingsWindow {
             
             // Кнопка сохранения настроек
             ui.separator();
-            if ui.button("Сохранить настройки").clicked() {
-                // TODO: Реализовать сохранение настроек
-                info!("Настройки сохранены: {:?}", self.settings);
+            if ui.button("Применить").clicked() {
+                // TODO: Применить настройки прозрачности к главному окну
+                info!("Применена прозрачность: {}%", self.opacity * 100.0);
             }
         });
     }
