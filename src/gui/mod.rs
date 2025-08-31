@@ -10,7 +10,12 @@ pub use main_window::{MainWindow, WindowCommand};
 pub use settings_window::SettingsWindow;
 
 use eframe::egui;
-use crate::config::{WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT};
+use crate::config::{
+    MAIN_WINDOW_TITLE, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, 
+    MIN_MAIN_WINDOW_WIDTH, MIN_MAIN_WINDOW_HEIGHT,
+    SETTINGS_WINDOW_TITLE, SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT,
+    MIN_SETTINGS_WINDOW_WIDTH, MIN_SETTINGS_WINDOW_HEIGHT
+};
 
 /// Запуск главного окна приложения
 pub fn run() -> Result<(), eframe::Error> {
@@ -30,8 +35,8 @@ pub fn run() -> Result<(), eframe::Error> {
                 // Настройки окна
                 let window_options = eframe::NativeOptions {
                     viewport: egui::ViewportBuilder::default()
-                        .with_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
-                        .with_min_inner_size([MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT])
+                        .with_inner_size([MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT])
+                        .with_min_inner_size([MIN_MAIN_WINDOW_WIDTH, MIN_MAIN_WINDOW_HEIGHT])
                         .with_transparent(true)
                         .with_decorations(true), 
                     ..Default::default()
@@ -41,7 +46,7 @@ pub fn run() -> Result<(), eframe::Error> {
                 
                 // Запускаем главное окно
                 let result = eframe::run_native(
-                    WINDOW_TITLE,
+                    MAIN_WINDOW_TITLE,
                     window_options,
                     Box::new(move |_cc| {
                         Ok(Box::new(MainWindow::new().with_command_sender(tx_clone)) as Box<dyn eframe::App>)
@@ -65,8 +70,8 @@ pub fn run() -> Result<(), eframe::Error> {
                 // Настройки окна
                 let window_options = eframe::NativeOptions {
                     viewport: egui::ViewportBuilder::default()
-                        .with_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
-                        .with_min_inner_size([MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT])
+                        .with_inner_size([SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT])
+                        .with_min_inner_size([MIN_SETTINGS_WINDOW_WIDTH, MIN_SETTINGS_WINDOW_HEIGHT])
                         .with_transparent(true)
                         .with_decorations(true), 
                     ..Default::default()
@@ -76,7 +81,7 @@ pub fn run() -> Result<(), eframe::Error> {
                 
                 // Запускаем окно настроек
                 let result = eframe::run_native(
-                    "Настройки",
+                    SETTINGS_WINDOW_TITLE,
                     window_options,
                     Box::new(move |_cc| {
                         Ok(Box::new(SettingsWindow::new().with_command_sender(tx_clone)) as Box<dyn eframe::App>)
