@@ -8,9 +8,7 @@
 - Обязательно следуй правилам для настроек: Не применять никакие изменения без нажатия на кнопку сохранить.
 - Добавлять комментарии на русском к функциям и компонентам.
 - Комментарии не удалять.
-- Разделять бизнес-логику и UI.
-- Соблюдай PEP 8.
-- ОС: Arch Linux, Gnome
+- ОС: Arch Linux
 - Графический сервер: Wayland
 - В корневую папку ничего лишнего не создавать. 
 - Все что касается дополнений, таких как Flatpak, AppImage, Docker и т.д. нужно создавать соответствующие папки в папке target.
@@ -44,6 +42,4 @@ Mehdi Yarrahi Fajr - AdhanMehdiYarrahiFajr.mp3
 Mishary Rashid Alafasy - AdhanMisharyRashidAlafasy.mp3
 Mishary Rashid Alafasy (Fajr Adhan) - AdhanMisharyRashidAlafasyFajr.mp3
 
-# MyCommands
-cargo run
-cargo build
+
