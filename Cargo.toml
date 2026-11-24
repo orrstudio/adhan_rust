@@ -1,0 +1,21 @@
+[package]
+name = "adhan"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "adhan"
+path = "src/main.rs"
+
+[dependencies]
+iced = { version = "0.12", features = ["tokio"] }
+iced_graphics = "0.12"
+rodio = "0.18"
+rusqlite = { version = "0.31", features = ["bundled"] }
+reqwest = { version = "0.12", features = ["json", "blocking"] }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = "0.4"
